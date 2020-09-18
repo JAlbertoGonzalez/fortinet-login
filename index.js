@@ -16,13 +16,13 @@ function DoLoginLanzadera(redirect) {
 
     const queryBodyString = new URLSearchParams(bodyParts).toString()
 
-    console.log('Conectando a internet a través de Lanzadera con tu usuario "%s"', process.env.USER)
+    console.log('Conectando a internet a través de Lanzadera con tu usuario "%s"...', process.env.USER)
 
     return fetch(`http://${urlParts.host}`, {
         method: 'POST',
         body: queryBodyString
     }).then(() => {
-        console.log('')
+        console.log('CONEXIÓN REALIZADA CON ÉXITO. YA PUEDES VER PORNO')
     }).catch(err => {
         console.log(err)
         console.log('ALGO SALIO MAL. ¿USUARIO Y CONTRASEÑA INCORRECTOS?')
@@ -37,22 +37,22 @@ function IsLanzaderaLoginNeeded() {
             return DoLoginLanzadera(res.url)
         } else {
             console.log(res)
-            console.log('ERROR: NO PUEDO COMPROBAR SI ESTÁS EN LANZADERA')
+            console.log('ERROR: SEGURO QUE ESTÁS CONECTADO A MARINADEEMPRESAS? (Error 1)')
         }
     }).catch(err => {
         console.log(err)
-        console.log('ERROR')
+        console.log('ERROR: SEGURO QUE ESTÁS CONECTADO A MARINADEEMPRESAS (Error 2)')
     })
 }
 
-function FirstConnectionAttempt() {
+async function FirstConnectionAttempt() {
     if (!process.env.USER || !process.env.PASS) {
         return console.log('ERROR: NO ME HAS DICHO TU USUARIO/CONTRASEÑA DE LANZADERA. COMPRUEBA EL FICHERO .ENV')
     }
 
     return fetch('https://www.google.es/').then(res => {
         if (res.status === 200) {
-            console.log('TU CONEXIÓN A INTERNET ES CORRECTA. NO NECESITAS HACER ESTO')
+            console.log('TU CONEXIÓN A INTERNET ES CORRECTA. NO NECESITAS HACER ESTO.')
         } else {
             console.log(res)
         }
@@ -68,4 +68,10 @@ function FirstConnectionAttempt() {
     })
 }
 
-FirstConnectionAttempt()
+module.exports = FirstConnectionAttempt
+
+FirstConnectionAttempt().then(() => {
+    process.exit(0)
+}).catch(err => {
+    process.exit(1)
+})
